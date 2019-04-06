@@ -97,10 +97,21 @@ func main() {
 	books = append(books, Book{ID: "2", Isbn: "444445", Title: "Book Two", Author: &Author{Firstname: "Russ", Lastname: "Smith"}})
 
 	// Route Handlers/Endpoints
+
+	// curl -vs http://localhost:8000/api/books | jq .
+	// curl --verbose --silent http://localhost:8000/api/books | jq .
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
+
+	// curl -vs http://localhost:8000/api/books/1 | jq .
 	r.HandleFunc("/api/books/{id}", getBook).Methods("GET")
+
+	// curl -vs -H "Content-Type: application/json" -X POST -d '{"isbn":"999999","title":"Book Three","author":{"firstname":"Russell","lastname":"Smith"}}' http://localhost:8000/api/books | jq .
 	r.HandleFunc("/api/books", createBook).Methods("POST")
+
+	// curl -vs -H "Content-Type: application/json" -X PUT -d '{"isbn":"123456","title":"My Updated Title","author":{"firstname":"Rusty","lastname":"J"}}' http://localhost:8000/api/books/2 | jq .
 	r.HandleFunc("/api/books/{id}", updateBooks).Methods("PUT")
+
+	// curl -vs -X DELETE http://localhost:8000/api/books/2 | jq .
 	r.HandleFunc("/api/books/{id}", deleteBooks).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8000", r))
